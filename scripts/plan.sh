@@ -13,6 +13,8 @@ fi
 echo "Planning Terraform changes for $ENVIRONMENT environment..."
 cd "environments/$ENVIRONMENT"
 
+terraform init
+
 terraform plan -out="tfplan"
 
 echo "Plan saved to tfplan"

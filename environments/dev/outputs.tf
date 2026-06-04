@@ -1,3 +1,4 @@
+#VPC Outputs
 output "vpc_id" {
   description = "VPC ID created for the development environment"
   value       = module.vpc.vpc_id
@@ -18,6 +19,8 @@ output "private_subnet_ids" {
   value       = module.vpc.private_subnet_ids
 }
 
+
+#EKS Outputs
 output "eks_cluster_id" {
   description = "EKS cluster ID for the development environment"
   value       = module.eks.eks_cluster_id

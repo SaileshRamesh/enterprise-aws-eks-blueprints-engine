@@ -3,6 +3,11 @@ output "vpc_id" {
   value       = aws_vpc.this.id
 }
 
+output "vpc_cidr" {
+  description = "The CIDR block of the created VPC"
+  value       = aws_vpc.this.cidr_block
+}
+
 output "public_subnet_ids" {
   description = "IDs of public subnets"
   value       = values(aws_subnet.public)[*].id
@@ -25,7 +30,7 @@ output "private_subnet_cidrs" {
 
 output "nat_gateway_ids" {
   description = "IDs of NAT gateways created for the VPC"
-  value       = values(aws_nat_gateway.this)[*].id
+  value       = aws_nat_gateway.this.id
 }
 
 output "internet_gateway_id" {

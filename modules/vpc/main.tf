@@ -34,7 +34,7 @@ resource "aws_subnet" "public" {
     var.public_subnet_tags,
     {
       Name = "${var.name_prefix}-${var.environment}-public-${each.key}"
-      kubernetes.io/role/elb       = "1"
+      "kubernetes.io/role/elb"       = "1"
       "kubernetes.io/cluster/${var.environment}-eks" = "owned"
     }
   )
@@ -52,33 +52,32 @@ resource "aws_subnet" "private" {
     var.private_subnet_tags,
     {
       Name = "${var.name_prefix}-${var.environment}-private-${each.key}"
-      kubernetes.io/role/internal-elb = "1"
+      "kubernetes.io/role/internal-elb" = "1"
       "kubernetes.io/cluster/${var.environment}-eks" = "owned"
     }
   )
 }
 
 resource "aws_eip" "nat" {
-  for_each = local.public_subnets
+  domain = "vpc"
 
   tags = merge(
     local.common_tags,
     {
-      Name = "${var.name_prefix}-${var.environment}-nat-${each.key}"
+      Name = "${var.name_prefix}-${var.environment}-nat-eip"
     }
   )
 }
 
 resource "aws_nat_gateway" "this" {
-  for_each = aws_subnet.public
 
-  allocation_id = aws_eip.nat[each.key].id
-  subnet_id     = each.value.id
+  allocation_id = aws_eip.nat.id
+  subnet_id     = values(aws_subnet.public)[0].id
 
   tags = merge(
     local.common_tags,
     {
-      Name = "${var.name_prefix}-${var.environment}-nat-${each.key}"
+      Name = "${var.name_prefix}-${var.environment}-nat-gateway"
     }
   )
 
@@ -109,19 +108,17 @@ resource "aws_route_table_association" "public" {
 }
 
 resource "aws_route_table" "private" {
-  for_each = aws_subnet.private
-
   vpc_id = aws_vpc.this.id
 
   route {
     cidr_block     = "0.0.0.0/0"
-    nat_gateway_id = aws_nat_gateway.this[each.key].id
+    nat_gateway_id = aws_nat_gateway.this.id
   }
 
   tags = merge(
     local.common_tags,
     {
-      Name = "${var.name_prefix}-${var.environment}-private-rt-${each.key}"
+      Name = "${var.name_prefix}-${var.environment}-private-rt"
     }
   )
 }
@@ -130,5 +127,5 @@ resource "aws_route_table_association" "private" {
   for_each = aws_subnet.private
 
   subnet_id      = each.value.id
-  route_table_id = aws_route_table.private[each.key].id
+  route_table_id = aws_route_table.private.id
 }

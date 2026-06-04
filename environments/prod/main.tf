@@ -21,7 +21,7 @@ module "eks" {
   source = "../../modules/eks"
 
   cluster_name        = "${var.environment}-eks"
-  cluster_version     = "1.25"
+  cluster_version     = "1.34"
   enable_irsa         = true
   environment         = var.environment
   project_name        = var.project_name
