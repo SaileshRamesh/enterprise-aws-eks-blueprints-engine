@@ -1,18 +1,20 @@
-module "eks_blueprints" {
-  source = "git::https://github.com/aws-ia/terraform-aws-eks-blueprints.git?ref=v4.25.0"
+module "eks" {
+  source  = "terraform-aws-modules/eks/aws"
+  version = "~> 20.0"
 
   cluster_name    = var.cluster_name
   cluster_version = var.cluster_version
-  enable_irsa     = var.enable_irsa
 
-  map_roles = var.map_roles
+  cluster_endpoint_public_access = var.cluster_endpoint_public_access
 
-  fargate_profiles = var.fargate_profiles
+  vpc_id                   = var.vpc_id
+  subnet_ids               = var.private_subnet_ids
+  control_plane_subnet_ids = var.private_subnet_ids
 
-  vpc_id             = var.vpc_id
-  private_subnet_ids = var.private_subnet_ids
+  eks_managed_node_groups = var.eks_managed_node_groups
 
-  managed_node_groups = var.managed_node_groups
+  enable_irsa = var.enable_irsa
+  enable_cluster_creator_admin_permissions = var.enable_cluster_creator_admin_permissions
 
   tags = merge(
     var.tags,

@@ -26,8 +26,8 @@ module "karpenter" {
 resource "kubectl_manifest" "karpenter_provisioner" {
   yaml_body = <<-YAML
 ---
-apiVersion: karpenter.sh/v1alpha5
-kind: Provisioner
+apiVersion: karpenter.sh/v1
+kind: NodePool
 metadata:
   name: default
 spec:
@@ -46,15 +46,13 @@ spec:
   providerRef:
     name: default
 YAML
-
-  depends_on = var.depends_on_modules
 }
 
 resource "kubectl_manifest" "karpenter_template" {
   yaml_body = <<-YAML
 ---
-apiVersion: karpenter.k8s.aws/v1alpha1
-kind: AWSNodeTemplate
+apiVersion: karpenter.k8s.aws/v1
+kind: EC2NodeTemplate
 metadata:
     name: default
 spec:
@@ -66,6 +64,4 @@ spec:
   tags:
     "kubernetes.io/cluster/${var.cluster_id}": "owned"
 YAML
-
-  depends_on = var.depends_on_modules
 }

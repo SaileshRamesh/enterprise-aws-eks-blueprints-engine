@@ -1,2 +1,9 @@
-# IAM Module - outputs.tf
-# Output values from IAM module
+output "iam_role_arn" {
+  description = "ARN of the IAM role"
+  value       = module.ebs_csi_driver_irsa.iam_role_arn
+}
+
+output "iam_role_name" {
+  description = "Name of the IAM role"
+  value       = module.ebs_csi_driver_irsa.iam_role_name
+}

@@ -1,29 +1,66 @@
-output "eks_cluster_id" {
-  description = "EKS cluster ID"
-  value       = module.eks_blueprints.eks_cluster_id
-}
-
-output "eks_cluster_endpoint" {
-  description = "Endpoint of the EKS cluster"
-  value       = module.eks_blueprints.eks_cluster_endpoint
-}
-
-output "eks_cluster_certificate_authority_data" {
-  description = "Base64 encoded certificate authority data for the EKS cluster"
-  value       = module.eks_blueprints.eks_cluster_certificate_authority_data
-}
-
-output "eks_cluster_name" {
+output "cluster_name" {
   description = "EKS cluster name"
-  value       = module.eks_blueprints.eks_cluster_name
+  value       = module.eks.cluster_name
 }
 
-output "cluster_primary_security_group_id" {
-  description = "Primary security group ID for the EKS cluster."
-  value       = module.eks_blueprints.cluster_primary_security_group_id
+output "cluster_endpoint" {
+  description = "EKS cluster endpoint"
+  value       = module.eks.cluster_endpoint
 }
 
-output "eks_oidc_provider_arn" {
-  description = "ARN of the IRSA OIDC provider for the EKS cluster"
-  value       = module.eks_blueprints.eks_oidc_provider_arn
+output "cluster_region" {
+  description = "AWS region"
+  value       = var.aws_region
 }
+
+output "oidc_provider_arn" {
+  description = "ARN of the OIDC Provider for the EKS cluster"
+  value       = module.eks.oidc_provider_arn
+}
+
+output "configure_kubectl" {
+  description = "Command to configure kubectl"
+  value       = "aws eks update-kubeconfig --region ${var.aws_region} --name ${module.eks.cluster_name}"
+}
+
+# output "argocd_server_url" {
+#   description = "ArgoCD Server LoadBalancer URL (run command to get)"
+#   value       = "kubectl get svc argocd-server -n argocd -o jsonpath='{.status.loadBalancer.ingress[0].hostname}'"
+# }
+
+# output "argocd_admin_password_command" {
+#   description = "Command to get ArgoCD admin password"
+#   value       = "kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath='{.data.password}' | base64 -d"
+# }
+
+# output "application_url_command" {
+#   description = "Command to get application frontend URL"
+#   value       = "kubectl get svc frontend -n 3tirewebapp-dev -o jsonpath='{.status.loadBalancer.ingress[0].hostname}'"
+# }
+
+# output "demo_instructions" {
+#   description = "Instructions for demo"
+#   value       = <<-EOT
+#     ========================================
+#     🎉 GitOps Demo Environment Ready!
+#     ========================================
+    
+#     1. Configure kubectl:
+#        aws eks update-kubeconfig --region ${var.aws_region} --name ${module.eks.cluster_name}
+    
+#     2. ArgoCD UI:
+#        Get URL with: kubectl get svc argocd-server -n argocd
+#        Username: admin
+#        Password: Run this command:
+#          kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath='{.data.password}' | base64 -d
+    
+#     3. Application Frontend:
+#        Wait 2-3 minutes for ArgoCD to sync, then run:
+#          kubectl get svc frontend -n 3tirewebapp-dev
+       
+#     4. Check ArgoCD Application Status:
+#        kubectl get applications -n argocd
+    
+#     ========================================
+#   EOT
+# }

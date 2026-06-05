@@ -66,12 +66,6 @@ variable "provisioner_excluded_instance_sizes" {
   default     = ["nano", "micro", "small", "large"]
 }
 
-variable "depends_on_modules" {
-  type        = list(any)
-  description = "Modules that must be created before Karpenter"
-  default     = []
-}
-
 variable "tags" {
   type        = map(string)
   description = "Tags to apply to Karpenter resources"

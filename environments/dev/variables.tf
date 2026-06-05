@@ -65,3 +65,9 @@ variable "db_skip_final_snapshot" {
   type        = bool
   default     = true
 }
+
+variable "control_plane_subnet_ids" {
+  description = "List of subnet IDs for EKS control plane"
+  type        = list(string)
+  default     = []
+}
